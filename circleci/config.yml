@@ -1,0 +1,23 @@
+# .circleci/config.yml
+version: 2.1
+jobs:
+  build-and-test:
+    docker:
+      - image: cimg/python:3.11.10
+    steps:
+      - checkout # Step 1: Check out the code from the repository
+      - run: 
+         name: Run backtest tests
+         command: python -m unittest tests/test_backtest.py
+  
+workflows:
+  main-workflow:
+    jobs:
+      - build-and-test
+    triggers:
+      - schedule:
+          cron: "40 1 * * *"
+          filters:
+            branches:
+              only:
+                - main
